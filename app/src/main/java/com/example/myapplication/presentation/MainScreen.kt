@@ -7,12 +7,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,40 +32,49 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.data.models.NumberModel
 import com.example.myapplication.domain.usecases.number.AddNumberUseCase
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import kotlinx.coroutines.coroutineScope
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    appList: List<NumberModel>
+    appList: List<NumberModel>,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    Box(
+    val sortedList by mainViewModel.numbersByOrder.collectAsState()
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
     ) {
-        AppGrid(appList)
-    }
-}
-
-@Composable
-fun AppGrid(appList: List<NumberModel>,
-            mainViewModel: MainViewModel = hiltViewModel()) {
-    LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
-        items(appList.size) { index ->
-            AppItem(appList[index])
-            mainViewModel.addNumber(
-                AddNumberUseCase.Params(
-                    number = appList[index].number
-                ))
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            OutlinedTextField(
+                value = sortedList,
+                onValueChange = {},
+                enabled = false,
+                shape = RoundedCornerShape(25.dp),
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
-    }
-    )
+            LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
+                items(appList.size) { index ->
+                    AppItem(appList[index])
+                }
+            }
+            )
+
+        }
 }
 
 @Composable
-fun AppItem(number: NumberModel,
-            mainViewModel: MainViewModel = hiltViewModel()) {
+fun AppItem(
+    number: NumberModel,
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -67,7 +83,11 @@ fun AppItem(number: NumberModel,
             .background(Color.Transparent)
             .border(2.dp, Color.Black, RoundedCornerShape(16.dp))
             .clickable {
-
+                mainViewModel.addNumber(
+                    AddNumberUseCase.Params(
+                        number = number.number
+                    )
+                )
             }
     ) {
         Text(
