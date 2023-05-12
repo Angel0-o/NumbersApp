@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation
+package com.example.myapplication.presentation.mainScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,6 +48,9 @@ fun MainScreen(
     ) {
         Box(
             Modifier
+                .border(width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(16.dp))
                 .fillMaxWidth()
                 .height(300.dp)
                 .verticalScroll(rememberScrollState())
@@ -56,7 +59,6 @@ fun MainScreen(
                 value = sortedList,
                 onValueChange = {},
                 enabled = false,
-                shape = RoundedCornerShape(25.dp),
                 modifier = Modifier.fillMaxWidth(),
             )
         }

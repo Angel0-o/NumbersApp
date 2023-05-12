@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation
+package com.example.myapplication.presentation.mainScreen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
     val appList = listOf(
-        NumberModel(0, 0),
         NumberModel(1, 1),
         NumberModel(2, 2),
         NumberModel(3, 3),
@@ -26,6 +25,10 @@ class MainActivity : ComponentActivity() {
         NumberModel(6, 6),
         NumberModel(7, 7),
         NumberModel(8, 8),
+        NumberModel(9, 9),
+        NumberModel(10, 10),
+        NumberModel(11, 11),
+        NumberModel(12, 12),
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
